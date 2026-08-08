@@ -1,3 +1,4 @@
+"use strict";
 function start() {
     const dropdown = document.querySelectorAll(".dropdown");
     dropdown.forEach((fix) => {
@@ -76,8 +77,6 @@ function Save(statFile) {
 async function DataFixerUpper() {
     let statFile = await LoadFile();
     let VerIndex = TargetVer + 1;
-    const statsObject = JSON.parse(statFile);
-    console.log(statsObject);
     if (VerIndex > 0) // 13w37a - 1.7.10/14w05b numeric
      {
         // Unlit torch into a lit torch
@@ -531,4 +530,3 @@ async function DataFixerUpper() {
     }
     Save(statFile);
 }
-export {};
