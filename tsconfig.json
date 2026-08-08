@@ -1,12 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "module": "None",
     "rootDir": "./src",
     "outDir": "./build",
 
     "strict": true,
-    "esModuleInterop": false,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
 

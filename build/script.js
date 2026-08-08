@@ -1,4 +1,3 @@
-"use strict";
 function start() {
     const dropdown = document.querySelectorAll(".dropdown");
     dropdown.forEach((fix) => {
@@ -77,6 +76,8 @@ function Save(statFile) {
 async function DataFixerUpper() {
     let statFile = await LoadFile();
     let VerIndex = TargetVer + 1;
+    const statsObject = JSON.parse(statFile);
+    console.log(statsObject);
     if (VerIndex > 0) // 13w37a - 1.7.10/14w05b numeric
      {
         // Unlit torch into a lit torch
@@ -272,7 +273,7 @@ async function DataFixerUpper() {
     // DataVersion was added in 17w47a meaning any file that includes it is already in the new format.
     if (VerIndex > 6 && !statFile.includes("DataVersion")) // Flattening rework (17w47a)
      {
-        let GeneralStatLower = ["interact_with_beacon", "eat_cake_slice",
+        let GeneralStatLower = ["aviate_one_cm", "interact_with_beacon", "eat_cake_slice",
             "horse_one_cm", "pig_one_cm", "leave_game", "clean_banner", "swim_one_cm",
             "climb_one_cm", "open_enderchest", "inspect_hopper", "fill_cauldron",
             "trigger_trapped_chest", "interact_with_furnace", "talked_to_villager",
@@ -283,8 +284,8 @@ async function DataFixerUpper() {
             "tune_noteblock", "use_cauldron", "damage_dealt", "damage_taken", "sleep_in_bed",
             "pot_flower", "walk_one_cm", "animals_bred", "player_kills", "minecart_one_cm",
             "open_shulker_box", "enchant_item", "mob_kills", "sneak_time", "clean_armor",
-            "play_one_minute", "time_since_death", "fly_one_cm",];
-        let GeneralStatUpper = ["beaconInteraction", "cakeSlicesEaten",
+            "play_one_minute", "time_since_death", "fly_one_cm"];
+        let GeneralStatUpper = ["aviateOneCm", "beaconInteraction", "cakeSlicesEaten",
             "horseOneCm", "pigOneCm", "leaveGame", "bannerCleaned", "swimOneCm",
             "climbOneCm", "enderchestOpened", "hopperInspected", "cauldronFilled",
             "trappedChestTriggered", "furnaceInteraction", "talkedToVillager",
@@ -295,16 +296,17 @@ async function DataFixerUpper() {
             "damageDealt", "damageTaken", "sleepInBed", "flowerPotted", "walkOneCm", "animalsBred",
             "playerKills", "minecartOneCm", "shulkerBoxOpened", "itemEnchanted", "mobKills", "sneakTime",
             "armorCleaned", "playOneMinute", "timeSinceDeath", "flyOneCm"];
-        // In 17w47a various blocks were renamed or separated into their own IDs
+        // In 17w47a various blocks were renamed or separated into their own IDs. Statistics would track everything as DV0
+        // Meaning all colour of wool would be treated as DV0 wool (White), this later converts into white_wool so we do similarly
         let GeneralRenamingRename = [
             "grass_block", "oak_sapling", "oak_planks", "oak_log", "oak_leaves", "note_block", "red_bed", "powered_rail",
             "cobweb", "grass", "dead_bush", "white_wool", "dandelion", "poppy", "moving_piston", "bricks", "oak_door",
             "cobblestone_stairs", "snow_block", "snow", "sugar_cane", "oak_fence", "carved_pumpkin",
             "jack_o_lantern", "repeater", "white_stained_glass", "oak_trapdoor", "infested_stone", "stone_bricks",
             "oak_fence_gate", "lily_pad", "nether_bricks", "oak_slab", "oak_button", "skeleton_skull", "comparator",
-            "nether_quartz_ore", "white_stained_glass_pane", "acacia_leaves", "acacia_log", "slime_block",
-            "white_carpet", "sunflower", "red_sandstone_slab", "end_stone_bricks", "magma_block",
-            "white_concrete", "gray_shulker_box", "gray_glazed_terracotta",
+            "nether_quartz_ore", "white_terracotta", "white_stained_glass_pane", "acacia_leaves", "acacia_log", "slime_block",
+            "white_carpet", "sunflower", "red_sandstone_slab", "end_stone_bricks", "magma_block", "red_nether_bricks",
+            "white_concrete", "white_concrete_powder", "gray_shulker_box", "gray_glazed_terracotta",
             "cod", "cooked_cod", "ink_sac", "pig_spawn_egg", "firework_rocket", "firework_star", "nether_brick",
             "music_disc_13", "music_disc_cat", "music_disc_blocks", "music_disc_chirp", "music_disc_far", "music_disc_mall",
             "music_disc_mellohi", "music_disc_stal", "music_disc_strad", "music_disc_ward", "music_disc_11", "music_disc_wait"
@@ -312,11 +314,11 @@ async function DataFixerUpper() {
         let GeneralRenamingOriginal = [
             "grass", "sapling", "planks", "log", "leaves", "noteblock", "bed", "golden_rail", "web", "tallgrass", "deadbush",
             "wool", "yellow_flower", "red_flower", "piston_extension", "brick_block", "wooden_door", "stone_stairs",
-            "snow", "snow_layer", "snow_ball", "reeds", "fence", "pumpkin", "lit_pumpkin",
-            "unpowered_repeater", "stained_glass", "trapdoor", "monster_egg", "stonebrick", "fence_gate", "waterlily",
-            "nether_brick", "wooden_slab", "wooden_button", "skull", "unpowered_comparator", "quartz_ore", "stained_glass_pane",
-            "leaves2", "log2", "slime", "carpet", "double_plant", "stone_slab2", "end_bricks", "magma",
-            "concrete", "silver_shulker_box", "silver_glazed_terracotta",
+            "snow", "snow_layer", "snow_ball", "reeds", "fence", "pumpkin", "lit_pumpkin", "unpowered_repeater", "stained_glass",
+            "trapdoor", "monster_egg", "stonebrick", "fence_gate", "waterlily", "nether_brick", "wooden_slab", "wooden_button",
+            "skull", "unpowered_comparator", "quartz_ore", "stained_hardened_clay", "stained_glass_pane", "leaves2", "log2",
+            "slime", "carpet", "double_plant", "stone_slab2", "end_bricks", "magma", "red_nether_brick", "concrete", "concrete_powder",
+            "silver_shulker_box", "silver_glazed_terracotta",
             "fish", "cooked_fish", "dye", "spawn_egg", "fireworks", "firework_charge", "netherbrick",
             "record_13", "record_cat", "record_blocks", "record_chirp", "record_far", "record_mall", "record_mellohi", "record_stal",
             "record_strad", "record_ward", "record_11", "record_wait"
@@ -529,3 +531,4 @@ async function DataFixerUpper() {
     }
     Save(statFile);
 }
+export {};
